@@ -19,7 +19,10 @@ class NewsModel {
         status: json["status"],
         totalResults: json["totalResults"],
         articles: List<Article>.from(
-            json["articles"].map((x) => Article.fromJson(x))),
+          json["articles"].map(
+            (x) => Article.fromJson(x),
+          ),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,18 +55,19 @@ class Article {
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
         source: Source.fromJson(json["source"]),
-        author: json["author"] == null ? null : json["author"],
+        author: json["author"] == null ? "" : json["author"],
         title: json["title"],
-        description: json["description"],
+        description: json["description"] == null ? "" : json["description"],
         url: json["url"],
-        urlToImage: json["urlToImage"],
+        urlToImage: json["urlToImage"] ??
+            "https://image.cnbcfm.com/api/v1/image/106959962-1634151295148-gettyimages-1235405345-BIZ-WALGREENS-SHIELDS-TB.jpeg?v=1647003524&w=1920&h=1080",
         publishedAt: DateTime.parse(json["publishedAt"]),
-        content: json["content"],
+        content: json["content"] ?? "Content",
       );
 
   Map<String, dynamic> toJson() => {
         "source": source.toJson(),
-        "author": author == null ? null : author,
+        "author": author == null ? "Author Not Provided" : author,
         "title": title,
         "description": description,
         "url": url,
@@ -79,12 +83,12 @@ class Source {
     required this.name,
   });
 
-  Id id;
-  Name name;
+  String id;
+  String name;
 
   factory Source.fromJson(Map<String, dynamic> json) => Source(
-        id: idValues.map[json["id"]]!,
-        name: nameValues.map[json["name"]]!,
+        id: json["id"] ?? "",
+        name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -109,9 +113,7 @@ class EnumValues<T> {
   Map<T, String> reverseMap = {};
 
   Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map.map((k, v) => MapEntry(v, k));
-    }
+    reverseMap = map.map((k, v) => MapEntry(v, k));
     return reverseMap;
   }
 }
